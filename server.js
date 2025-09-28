@@ -22,7 +22,7 @@ app.use(express.static("public"));
 app.set("trust proxy", true);
 
 // ---- Fixed amount: R2 (in cents) ----
-const FIXED_AMOUNT_CENTS = 200;
+const FIXED_AMOUNT_CENTS = 25000;
 
 // In-memory cache (fallback) to recover the note if metadata doesn’t include it
 const notesByCheckout = new Map();
@@ -160,4 +160,5 @@ app.post("/api/webhooks/yoco", async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+
 
