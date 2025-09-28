@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Pay R2</title>
+    <style>
+      :root { --bg:#0b0c10; --card:#12141a; --text:#e8edf2; --muted:#9aa7b2; --brand:#2563eb; }
+      * { box-sizing: border-box; }
+      body { margin:0; min-height:100vh; display:grid; place-items:center;
+             background: radial-gradient(70% 60% at 50% 0%, #162033 0, #0b0c10 60%);
+             color:var(--text); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;}
+      .card { width:min(520px, 92vw); background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+              border:1px solid rgba(255,255,255,.08); border-radius:18px; padding:24px 22px; box-shadow:0 10px 30px rgba(0,0,0,.35); backdrop-filter: blur(6px);}
+      .title{font-size:20px; font-weight:700; margin:0 0 6px;}
+      .amount{font-size:36px; font-weight:800; margin:2px 0 18px;}
+      label{font-size:14px; color:var(--muted); display:block; margin-bottom:6px;}
+      input[type=text]{width:100%; padding:12px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.13);
+                       background:#0e1117; color:var(--text); outline:none;}
+      input[type=text]:focus{border-color:var(--brand); box-shadow:0 0 0 4px rgba(37,99,235,.25);}
+      .btn{margin-top:16px; width:100%; padding:13px 16px; border-radius:12px; border:0; background:linear-gradient(135deg,#3876ff,#2153d6);
+           color:white; font-weight:700; font-size:16px; cursor:pointer;}
+      .hint{margin-top:8px; color:var(--muted); font-size:13px; text-align:center;}
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="title">Complete your payment</div>
+      <div class="amount">R2.00</div>
+      <form id="pay" autocomplete="on">
+        <label for="note">Reference / message (required)</label>
+        <input id="note" name="note" type="text" maxlength="120" placeholder="e.g. Order #1234 or Your Name" required />
+        <button class="btn" id="checkout">Proceed to checkout</button>
+        <div class="hint">You’ll be redirected to Yoco’s secure checkout page.</div>
+      </form>
+    </div>
+    <script>
+      const FIXED_AMOUNT_CENTS = 200; // R2
+      const form = document.getElementById("pay");
+      const btn = document.getElementById("checkout");
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        btn.disabled = true; btn.textContent = "Creating checkout…";
+        try {
+          const fd = new FormData(form);
+          const body = Object.fromEntries(fd.entries());
+          // save for success/cancel display (optional)
+          localStorage.setItem("lastNote", (body.note || "").trim());
+          localStorage.setItem("lastAmountCents", String(FIXED_AMOUNT_CENTS));
+          const r = await fetch("/api/checkout", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+          });
+          const data = await r.json();
+          if (r.ok && data.redirectUrl) location.href = data.redirectUrl;
+          else { alert(data.error || JSON.stringify(data)); btn.disabled=false; btn.textContent="Proceed to checkout"; }
+        } catch (err) {
+          alert(err.message || "Something went wrong");
+          btn.disabled=false; btn.textContent="Proceed to checkout";
+        }
+      });
+    </script>
+  </body>
+</html>
