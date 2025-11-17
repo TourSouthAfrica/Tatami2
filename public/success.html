@@ -55,7 +55,7 @@
       <p class="sub">Thank you! We’ve received your payment.</p>
 
       <div class="row">
-        <div class="kv"><div class="k">Amount</div><div id="amt">R250.00</div></div>
+        <div class="kv"><div class="k">Amount</div><div id="amt">R300.00</div></div>
         <div class="kv"><div class="k">Reference</div><div id="ref" class="muted">—</div></div>
       </div>
 
@@ -69,7 +69,7 @@
 
     <script>
       // Read details saved by index.html
-      const cents = Number(localStorage.getItem("lastAmountCents") || "200");
+      const cents = Number(localStorage.getItem("lastAmountCents") || "30000");
       const note  = localStorage.getItem("lastNote") || "";
       const fmt   = new Intl.NumberFormat("en-ZA", { style:"currency", currency:"ZAR" });
       if (Number.isFinite(cents)) document.getElementById("amt").textContent = fmt.format(cents/100);
@@ -77,4 +77,5 @@
     </script>
   </body>
 </html>
+
 
