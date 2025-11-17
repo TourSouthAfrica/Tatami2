@@ -26,7 +26,7 @@
   <body>
     <div class="card">
       <div class="title">Complete your payment</div>
-      <div class="amount">R250.00</div>
+      <div class="amount">R300.00</div>
       <form id="pay" autocomplete="on">
         <label for="note">Reference / message (required)</label>
         <input id="note" name="note" type="text" maxlength="120" placeholder="e.g. Order #1234 or Your Name" required />
@@ -35,7 +35,7 @@
       </form>
     </div>
     <script>
-      const FIXED_AMOUNT_CENTS = 200; // R2
+      const FIXED_AMOUNT_CENTS = 30000; // R300
       const form = document.getElementById("pay");
       const btn = document.getElementById("checkout");
       form.addEventListener("submit", async (e) => {
@@ -63,4 +63,5 @@
     </script>
   </body>
 </html>
+
 
